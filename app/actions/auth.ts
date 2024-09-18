@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { createSession, deleteSession } from "@/lib/session";
+import { createSession, deleteSession, updateSession } from "@/lib/session";
 import {
   SignupFormSchema,
   FormState,
@@ -8,6 +8,7 @@ import {
 } from "@/lib/validations/auth";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
+import { NextRequest } from "next/server";
 export async function signup(state: FormState, formData: FormData) {
   // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
@@ -36,7 +37,7 @@ export async function signup(state: FormState, formData: FormData) {
       password: hashedPassword,
     },
     select: {
-      userId: true, // returns the userId as the primary key
+      id: true, // returns the userId as the primary key
     },
   });
 
@@ -50,7 +51,7 @@ export async function signup(state: FormState, formData: FormData) {
 
   // TODO:
   // 4. Create user session
-  const userId = user.userId.toString();
+  const userId = user.id.toString();
   await createSession(userId);
   // 5. Redirect user
   redirect("/profile");
@@ -97,11 +98,15 @@ export async function login(
   }
 
   // 4. If login successful, create a session for the user and redirect
-  const userId = user.userId.toString();
+  const userId = user.id.toString();
   await createSession(userId);
+}
+
+export async function refresh(req: NextRequest) {
+  updateSession(req);
 }
 
 export async function logout() {
   deleteSession();
-  redirect("/login");
+  redirect("/signin");
 }
