@@ -78,5 +78,6 @@ export async function updateSession(req: NextRequest) {
 
 export function deleteSession() {
   cookies().delete("session");
+  console.log("logout sucessfully");
   redirect("/signin");
 }

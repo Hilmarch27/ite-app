@@ -1,14 +1,13 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { createSession, deleteSession, updateSession } from "@/lib/session";
+import { createSession, deleteSession } from "@/lib/session";
 import {
   SignupFormSchema,
   FormState,
   LoginFormSchema,
 } from "@/lib/validations/auth";
 import bcrypt from "bcrypt";
-import { redirect } from "next/navigation";
-import { NextRequest } from "next/server";
+
 export async function signup(state: FormState, formData: FormData) {
   // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
@@ -24,12 +23,23 @@ export async function signup(state: FormState, formData: FormData) {
     };
   }
 
-  // 2. Prepare data for insertion into database
   const { name, email, password } = validatedFields.data;
-  // e.g. Hash the user's password before storing it
+
+  // 1. Check if email already exists
+  const userCount = await prisma.user.count({
+    where: { email: email },
+  });
+
+  if (userCount > 0) {
+    return {
+      message: "Conflic: User already exists.",
+    };
+  }
+
+  // 2. Hash the user's password before storing it
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // 3. Insert the user into the database or call an Auth Library's API
+  // 3. Insert the user into the database
   const data = await prisma.user.create({
     data: {
       name: name,
@@ -42,22 +52,18 @@ export async function signup(state: FormState, formData: FormData) {
   });
 
   const user = data;
-  console.log("auth user", user);
   if (!user) {
     return {
       message: "An error occurred while creating your account.",
     };
   }
 
-  // TODO:
   // 4. Create user session
   const userId = user.id.toString();
   await createSession(userId);
-  // 5. Redirect user
-  redirect("/profile");
 }
 
-export async function login(
+export async function signin(
   state: FormState,
   formData: FormData
 ): Promise<FormState> {
@@ -66,7 +72,7 @@ export async function login(
     email: formData.get("email"),
     password: formData.get("password"),
   });
-  const errorMessage = { message: "Invalid login credentials." };
+  const errorMessage = { message: "Error: Invalid login credentials." };
 
   // If any form fields are invalid, return early
   if (!validatedFields.success) {
@@ -102,11 +108,10 @@ export async function login(
   await createSession(userId);
 }
 
-export async function refresh(req: NextRequest) {
-  updateSession(req);
+export async function deleteUsers() {
+  await prisma.user.deleteMany();
 }
 
 export async function logout() {
   deleteSession();
-  redirect("/signin");
 }
