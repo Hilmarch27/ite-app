@@ -8,6 +8,12 @@
 /.env
 env
 
+# Ignore all .env files
+.env*
+
+# Exception: do not ignore .env.dev
+!.env.dev
+
 # testing
 /coverage
 
