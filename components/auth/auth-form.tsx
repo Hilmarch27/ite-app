@@ -26,7 +26,7 @@ export function AuthForm() {
     toast.error(state.message);
   }
 
-
+  
   return (
     <form action={action}>
       <Card className="w-full max-w-sm">
