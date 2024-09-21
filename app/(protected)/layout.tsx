@@ -1,4 +1,4 @@
-import Nav from "@/components/layout/nav";
+import Nav from "@/components/layout/user-nav";
 
 export default function AuthLayout({
   children, // will be a page or nested layout
