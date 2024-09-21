@@ -1,12 +1,13 @@
+'use client';
 import { useEffect, useState } from "react";
 import { IconChevronsLeft, IconMenu2, IconX } from "@tabler/icons-react";
-import { Layout, LayoutHeader } from "./layout";
+import { Layout } from "./layout";
 import { cn } from "@/lib/utils";
 import { IconHeartFilled } from "@tabler/icons-react";
 import { Button } from "../ui/button";
-import Nav from "./user-nav";
 import { useMenu } from "@/hook/use-meu";
-import logo from "@/assets/react.svg";
+import Nav from "./nav";
+import Image from "next/image";
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   isCollapsed: boolean;
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
@@ -50,13 +51,16 @@ export default function Sidebar({
 
       <Layout>
         {/* Header */}
-        <LayoutHeader className="sticky top-0 justify-between px-4 py-3 shadow md:px-4">
+        <Layout.Header className="sticky top-0 justify-between px-4 py-3 shadow md:px-4">
           <div className={`flex items-center ${!isCollapsed ? "gap-2" : ""}`}>
-            <img
+            <Image
+              alt="logo"
+              width={32}
+              height={32}
               className={`transition-all ${
                 isCollapsed ? "h-6 w-6" : "h-8 w-8"
               }`}
-              src={logo}
+              src="https://res.cloudinary.com/dttcu7d3t/image/upload/v1726883266/pandas_srhxmh.png"
             />
             <div
               className={`flex flex-col justify-end truncate ${
@@ -83,7 +87,7 @@ export default function Sidebar({
           >
             {navOpened ? <IconX /> : <IconMenu2 />}
           </Button>
-        </LayoutHeader>
+        </Layout.Header>
 
         {/* Navigation links */}
         <Nav

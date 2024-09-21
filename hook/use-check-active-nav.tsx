@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { menuData } from "@/data/menu-data";
 import { usePathname } from "next/navigation";
