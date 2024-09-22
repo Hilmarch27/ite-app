@@ -18,7 +18,6 @@ export default function Sidebar({
   isCollapsed,
   setIsCollapsed,
 }: SidebarProps) {
-  localStorage.getItem("isAdmin");
   const menu = useMenu();
 
   const [navOpened, setNavOpened] = useState(false);
@@ -35,7 +34,7 @@ export default function Sidebar({
   return (
     <aside
       className={cn(
-        `fixed left-0 right-0 top-0 z-50 w-full border-r-2 border-r-muted transition-[width] md:bottom-0 md:right-auto md:h-svh ${
+        `fixed left-0 right-0 top-0 z-50 w-full border-r-2 border-r-primary transition-[width] md:bottom-0 md:right-auto md:h-svh ${
           isCollapsed ? "md:w-14" : "md:w-64"
         }`,
         className
@@ -49,9 +48,9 @@ export default function Sidebar({
         } w-full bg-black md:hidden`}
       />
 
-      <Layout>
+      <Layout className="overflow-hidden">
         {/* Header */}
-        <Layout.Header className="sticky top-0 justify-between px-4 py-3 shadow md:px-4">
+        <Layout.Header className="sticky top-0 justify-between px-4 py-[10px]  shadow md:px-4">
           <div className={`flex items-center ${!isCollapsed ? "gap-2" : ""}`}>
             <Image
               alt="logo"
@@ -67,7 +66,7 @@ export default function Sidebar({
                 isCollapsed ? "invisible w-0" : "visible w-auto"
               }`}
             >
-              <span className="font-medium ">RM</span>
+              <span className="font-medium ">ITE App</span>
               <span className="text-xs">
                 Made with Bismillah{" "}
                 <IconHeartFilled className="inline-block animate-pulse text-primary" />{" "}
@@ -93,7 +92,7 @@ export default function Sidebar({
         <Nav
           id="sidebar-menu"
           className={`h-full flex-1 overflow-auto ${
-            navOpened ? "max-h-screen" : "max-h-0 py-0 md:max-h-screen md:py-2"
+            navOpened ? "max-h-screen" : "max-h-0 py-0 md:max-h-screen"
           }`}
           closeNav={() => setNavOpened(false)}
           isCollapsed={isCollapsed}

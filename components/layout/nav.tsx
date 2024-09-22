@@ -1,3 +1,4 @@
+"use client";
 import { IconChevronDown } from "@tabler/icons-react";
 import { Button, buttonVariants } from "../ui/button";
 import {
@@ -116,7 +117,6 @@ function NavLink({
   );
 }
 
-
 function NavLinkDropdown({ title, icon, label, sub, closeNav }: NavLinkProps) {
   const { checkActiveNav } = useCheckActiveNav();
 
@@ -157,8 +157,6 @@ function NavLinkDropdown({ title, icon, label, sub, closeNav }: NavLinkProps) {
     </Collapsible>
   );
 }
-
-
 
 function NavLinkIcon({ title, icon, label, href }: NavLinkProps) {
   const { checkActiveNav } = useCheckActiveNav();

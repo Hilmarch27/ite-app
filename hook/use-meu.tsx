@@ -31,8 +31,8 @@ export function useMenu(): SideLink[] {
   const [menu, setMenu] = useState<SideLink[]>([]);
 
   useEffect(() => {
-    const isAdmin = localStorage.getItem("isAdmin") === "true"; // Get the isAdmin flag from localStorage
-
+    // const isAdmin = localStorage.getItem("isAdmin") === "true"; // Get the isAdmin flag from localStorage
+    const isAdmin = false;
     const iconMapping: IconMapping = {
       IconLayoutDashboard: <IconLayoutDashboard size={18} />,
       IconBook: <IconBook size={18} />,

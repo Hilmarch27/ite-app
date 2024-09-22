@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useEffect, useState } from "react";
 
 interface LocalStorageProps<T> {
@@ -11,12 +11,21 @@ export default function useLocalStorage<T>({
   defaultValue,
 }: LocalStorageProps<T>) {
   const [value, setValue] = useState<T>(() => {
-    const storedValue = localStorage.getItem(key);
-    return storedValue !== null ? (JSON.parse(storedValue) as T) : defaultValue;
+    if (typeof window !== "undefined") {
+      const storedValue = localStorage.getItem(key);
+      return storedValue !== null
+        ? (JSON.parse(storedValue) as T)
+        : defaultValue;
+    } else {
+      // Ketika di server-side rendering, gunakan defaultValue
+      return defaultValue;
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(value));
+    if (typeof window !== "undefined") {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
   }, [value, key]);
 
   return [value, setValue] as const;
