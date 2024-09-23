@@ -1,6 +1,4 @@
 "use client";
-import { columns, Payment } from "@/components/dashboard/columns";
-import { DataTable } from "@/components/dashboard/data-table";
 import { Layout } from "@/components/layout/layout";
 import { TopNav } from "@/components/layout/top-nav";
 import { UserNav } from "@/components/layout/user-nav";
@@ -10,19 +8,46 @@ import { SunMoon } from "@/components/ui/sun-moon";
 import { iconMap, tsiData } from "@/data/tsi-data";
 import { IconArrowBackUp } from "@tabler/icons-react";
 import React, { useState } from "react";
+import { DataTable } from "@/components/table/data-table";
+import { columns } from "@/components/table/columns";
+
 const PageDashboard = () => {
   const [openTable, setOpenTable] = useState({
     key: "none",
     isOpen: false,
   });
   console.log(openTable);
-
-  const data: Payment[] = [
+  const tasks = [
     {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
+      id: "TASK-8782",
+      title:
+        "You can't compress the program without quantifying the open-source SSD pixel!",
+      status: "in progress",
+      label: "documentation",
+      priority: "medium",
+    },
+    {
+      id: "TASK-7878",
+      title:
+        "Try to calculate the EXE feed, maybe it will index the multi-byte pixel!",
+      status: "backlog",
+      label: "documentation",
+      priority: "medium",
+    },
+    {
+      id: "TASK-7839",
+      title: "We need to bypass the neural TCP card!",
+      status: "todo",
+      label: "bug",
+      priority: "high",
+    },
+    {
+      id: "TASK-5562",
+      title:
+        "The SAS interface is down, bypass the open-source pixel so we can back up the PNG bandwidth!",
+      status: "backlog",
+      label: "feature",
+      priority: "medium",
     },
   ];
   return (
@@ -84,7 +109,7 @@ const PageDashboard = () => {
                   <IconArrowBackUp stroke={2} />
                   Back
                 </Button>
-                <DataTable columns={columns} data={data} />
+                <DataTable data={tasks} columns={columns} />
               </div>
             ) : (
               <>
@@ -96,7 +121,7 @@ const PageDashboard = () => {
                   Back
                 </Button>
                 <div className="flex justify-center items-center h-[60dvh]">
-                <span>Data Tidak Ada</span>
+                  <span>Data Tidak Ada</span>
                 </div>
               </>
             ))}
