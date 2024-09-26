@@ -1,30 +1,32 @@
-'use client'
-import { useEffect } from 'react'
-import useLocalStorage from './use-local-storage'
+'use client';
+import { useEffect, useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 export default function useIsCollapsed() {
-  const [isCollapsed, setIsCollapsed] = useLocalStorage({
-    key: "collapsed-sidebar",
-    defaultValue: false,
-  });
+  const [isClient, setIsClient] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useLocalStorage(
+    "collapsed-sidebar",
+    false
+  );
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
-      // Update isCollapsed based on window.innerWidth
       setIsCollapsed(window.innerWidth < 768 ? false : isCollapsed);
     };
 
-    // Initial setup
-    handleResize();
+    if (isClient) {
+      handleResize();
+      window.addEventListener("resize", handleResize);
+    }
 
-    // Add event listener for window resize
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup event listener on component unmount
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [isCollapsed, setIsCollapsed]);
+  }, [isClient, isCollapsed, setIsCollapsed]);
 
-  return [isCollapsed, setIsCollapsed] as const;
+  return [isClient ? isCollapsed : false, setIsCollapsed] as const;
 }
