@@ -20,7 +20,32 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Router    Router[]
 
   @@index([email])
   @@map("user")
+}
+
+model Router {
+  id           String @id @default(uuid())
+  typeOfUker   String
+  routerSeries String
+  nameUker     String
+  kanca        String
+  kanwil       String
+  ipUker       String
+  snDevice     String
+  status       Status
+  information  String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([snDevice, status])
+  @@map("router")
+}
+
+enum Status {
+  AKTIF
+  TUTUP
 }

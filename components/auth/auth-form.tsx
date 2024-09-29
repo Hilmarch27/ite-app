@@ -13,6 +13,7 @@ import {
 import { FloatingMain } from "../ui/floating-input";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export function AuthForm() {
   const pathname = usePathname();
@@ -26,7 +27,6 @@ export function AuthForm() {
     toast.error(state.message);
   }
 
-  
   return (
     <form action={action}>
       <Card className="w-full max-w-sm">
@@ -61,6 +61,13 @@ export function AuthForm() {
               label="Password"
             />
           </div>
+          <Link href="/signup">
+            <div className="-my-2">
+              <span className="text-xs underline text-primary">
+                Not have an account?
+              </span>
+            </div>
+          </Link>
         </CardContent>
         <CardFooter data-id="btn-auth">
           <SubmitButton isSignup={isSignup} />

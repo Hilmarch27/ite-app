@@ -10,6 +10,7 @@ import { IconArrowBackUp } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { DataTable } from "@/components/table/data-table";
 import { columns } from "@/components/table/columns";
+import { DialogCustom } from "@/components/custom/dialog-custom";
 
 const PageDashboard = () => {
   const [openTable, setOpenTable] = useState({
@@ -102,6 +103,7 @@ const PageDashboard = () => {
           {openTable.isOpen &&
             (openTable.key === "Data Router" ? (
               <div>
+                <DialogCustom />
                 <Button
                   className="my-3"
                   onClick={() => setOpenTable({ key: "none", isOpen: false })}

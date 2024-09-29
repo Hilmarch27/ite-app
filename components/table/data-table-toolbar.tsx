@@ -9,7 +9,14 @@ import { DataTableViewOptions } from "./data-table-view-options";
 
 import { priorities, statuses } from "@/data/example/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import * as ReactTable from '@tanstack/react-table';
+import * as ReactTable from "@tanstack/react-table";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import useDialogStore from "@/zustand/dialog-store";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -19,7 +26,7 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-
+  const {openDialog} = useDialogStore()
   // Get selected rows
   const selectedRows = table.getSelectedRowModel().rows;
 
@@ -79,7 +86,25 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <div className="flex items-center justify-between gap-2">
+        <Popover>
+          <PopoverTrigger>
+            <Button size={"xs"}>Tambah Data</Button>
+          </PopoverTrigger>
+          <PopoverContent side="left" className="max-w-[150px]">
+            <div className="flex flex-col gap-2">
+              <Button size={"xs"} onClick={() => openDialog("Import Excel")}>
+                Tambah Excel
+              </Button>
+              <Button size={"xs"} onClick={() => openDialog("Create Router")}>
+                Tambah Data
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        <DataTableViewOptions table={table} />
+      </div>
     </div>
   );
 }
