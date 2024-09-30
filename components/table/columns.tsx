@@ -6,10 +6,10 @@ import { Checkbox } from "../ui/checkbox";
 
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { RouterType } from "@/lib/validations/router";
 // import { Badge } from "../ui/badge";
-import { RouterFormType } from "@/lib/validations/router";
 
-export const columns: ColumnDef<RouterFormType>[] = [
+export const columns: ColumnDef<RouterType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -120,5 +120,5 @@ export const columns: ColumnDef<RouterFormType>[] = [
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,
-  }
+  },
 ];

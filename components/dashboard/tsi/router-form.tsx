@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import useDialogStore from "@/zustand/dialog-store";
 
 const RouterForm = () => {
-  const { closeDialog } = useDialogStore();
+  const {closeDialog} = useDialogStore(); 
 
   const form = useForm<any>({
     resolver: zodResolver(RouterFormSchema),
@@ -35,9 +35,9 @@ const RouterForm = () => {
 
     if (result.success === true) {
       toast.success("Berhasil Tambah Data");
+      closeDialog();
       return;
     }
-    closeDialog();
   };
 
   return (

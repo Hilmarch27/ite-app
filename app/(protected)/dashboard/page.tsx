@@ -11,8 +11,7 @@ import React, { useState } from "react";
 import { DataTable } from "@/components/table/data-table";
 import { columns } from "@/components/table/columns";
 import { DialogCustom } from "@/components/custom/dialog-custom";
-import { RouterFormSchema } from "@/lib/validations/router";
-import { z } from "zod";
+import { RouterType } from "@/lib/validations/router";
 
 const PageDashboard = () => {
   const [openTable, setOpenTable] = useState({
@@ -20,7 +19,7 @@ const PageDashboard = () => {
     isOpen: false,
   });
   console.log(openTable);
-  const tasks: z.infer<typeof RouterFormSchema>[] = [
+  const tasks: RouterType[] = [
     {
       id: "25415b86-6e04-47ca-89f0-57c651685fe6",
       typeOfUker: "KC",
