@@ -11,6 +11,8 @@ import React, { useState } from "react";
 import { DataTable } from "@/components/table/data-table";
 import { columns } from "@/components/table/columns";
 import { DialogCustom } from "@/components/custom/dialog-custom";
+import { RouterFormSchema } from "@/lib/validations/router";
+import { z } from "zod";
 
 const PageDashboard = () => {
   const [openTable, setOpenTable] = useState({
@@ -18,37 +20,18 @@ const PageDashboard = () => {
     isOpen: false,
   });
   console.log(openTable);
-  const tasks = [
+  const tasks: z.infer<typeof RouterFormSchema>[] = [
     {
-      id: "TASK-8782",
-      title:
-        "You can't compress the program without quantifying the open-source SSD pixel!",
-      status: "in progress",
-      label: "documentation",
-      priority: "medium",
-    },
-    {
-      id: "TASK-7878",
-      title:
-        "Try to calculate the EXE feed, maybe it will index the multi-byte pixel!",
-      status: "backlog",
-      label: "documentation",
-      priority: "medium",
-    },
-    {
-      id: "TASK-7839",
-      title: "We need to bypass the neural TCP card!",
-      status: "todo",
-      label: "bug",
-      priority: "high",
-    },
-    {
-      id: "TASK-5562",
-      title:
-        "The SAS interface is down, bypass the open-source pixel so we can back up the PNG bandwidth!",
-      status: "backlog",
-      label: "feature",
-      priority: "medium",
+      id: "25415b86-6e04-47ca-89f0-57c651685fe6",
+      typeOfUker: "KC",
+      routerSeries: "CISCO",
+      nameUker: "Dini",
+      kanca: "bandung",
+      kanwil: "bandung",
+      ipUker: "38.0.101.76",
+      snDevice: "AB1234",
+      status: "AKTIF",
+      information: "-",
     },
   ];
   return (

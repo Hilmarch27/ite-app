@@ -21,6 +21,16 @@ export const typeOfUker = [
   },
 ];
 
+export const status = [
+  {
+    value: "AKTIF",
+    label: "AKTIF",
+  },
+  {
+    value: "TUTUP",
+    label: "TUTUP",
+  },
+];
 
 export const kanca = [
   {
@@ -169,11 +179,6 @@ export const routerField = [
   {
     value: "snDevice",
     label: "SN Perangkat",
-    type: "text",
-  },
-  {
-    value: "status",
-    label: "Status",
     type: "text",
   },
   {
