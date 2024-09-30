@@ -75,6 +75,11 @@ export async function updateSession(req: NextRequest) {
   return res;
 }
 
+export async function getUserId(): Promise<string | undefined> {
+  const session = cookies().get("session")?.value;
+  const payload = await decrypt(session);
+  return payload?.userId as string;
+}
 
 export function deleteSession() {
   cookies().delete("session");

@@ -1,6 +1,4 @@
 "use client";
-import { columns, Payment } from "@/components/dashboard/columns";
-import { DataTable } from "@/components/dashboard/data-table";
 import { Layout } from "@/components/layout/layout";
 import { TopNav } from "@/components/layout/top-nav";
 import { UserNav } from "@/components/layout/user-nav";
@@ -10,19 +8,30 @@ import { SunMoon } from "@/components/ui/sun-moon";
 import { iconMap, tsiData } from "@/data/tsi-data";
 import { IconArrowBackUp } from "@tabler/icons-react";
 import React, { useState } from "react";
+import { DataTable } from "@/components/table/data-table";
+import { columns } from "@/components/table/columns";
+import { DialogCustom } from "@/components/custom/dialog-custom";
+import { RouterFormSchema } from "@/lib/validations/router";
+import { z } from "zod";
+
 const PageDashboard = () => {
   const [openTable, setOpenTable] = useState({
     key: "none",
     isOpen: false,
   });
   console.log(openTable);
-
-  const data: Payment[] = [
+  const tasks: z.infer<typeof RouterFormSchema>[] = [
     {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
+      id: "25415b86-6e04-47ca-89f0-57c651685fe6",
+      typeOfUker: "KC",
+      routerSeries: "CISCO",
+      nameUker: "Dini",
+      kanca: "bandung",
+      kanwil: "bandung",
+      ipUker: "38.0.101.76",
+      snDevice: "AB1234",
+      status: "AKTIF",
+      information: "-",
     },
   ];
   return (
@@ -77,6 +86,7 @@ const PageDashboard = () => {
           {openTable.isOpen &&
             (openTable.key === "Data Router" ? (
               <div>
+                <DialogCustom />
                 <Button
                   className="my-3"
                   onClick={() => setOpenTable({ key: "none", isOpen: false })}
@@ -84,7 +94,7 @@ const PageDashboard = () => {
                   <IconArrowBackUp stroke={2} />
                   Back
                 </Button>
-                <DataTable columns={columns} data={data} />
+                <DataTable data={tasks} columns={columns} />
               </div>
             ) : (
               <>
@@ -96,7 +106,7 @@ const PageDashboard = () => {
                   Back
                 </Button>
                 <div className="flex justify-center items-center h-[60dvh]">
-                <span>Data Tidak Ada</span>
+                  <span>Data Tidak Ada</span>
                 </div>
               </>
             ))}
