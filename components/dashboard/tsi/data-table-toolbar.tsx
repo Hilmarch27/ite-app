@@ -3,12 +3,11 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { DataTableViewOptions } from "../../table/data-table-view-options";
 
-import { priorities, statuses } from "@/data/example/data";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { DataTableFacetedFilter } from "../../table/data-table-faceted-filter";
 import * as ReactTable from "@tanstack/react-table";
 
 import {
@@ -17,6 +16,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import useDialogStore from "@/zustand/dialog-store";
+import { status, typeOfUker } from "@/data/router-data";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -26,7 +26,7 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-  const {openDialog} = useDialogStore()
+  const { openDialog } = useDialogStore();
   // Get selected rows
   const selectedRows = table.getSelectedRowModel().rows;
 
@@ -45,9 +45,9 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter tasks..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("nameUker")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("nameUker")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
@@ -55,14 +55,14 @@ export function DataTableToolbar<TData>({
           <DataTableFacetedFilter
             column={table.getColumn("status")}
             title="Status"
-            options={statuses}
+            options={status}
           />
         )}
-        {table.getColumn("priority") && (
+        {table.getColumn("typeOfUker") && (
           <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
+            column={table.getColumn("typeOfUker")}
+            title="jenis Uker"
+            options={typeOfUker}
           />
         )}
         {isFiltered && (

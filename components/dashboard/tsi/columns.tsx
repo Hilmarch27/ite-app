@@ -2,11 +2,12 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { Checkbox } from "../ui/checkbox";
+import { Checkbox } from "../../ui/checkbox";
 
-import { DataTableColumnHeader } from "./data-table-column-header";
-import { DataTableRowActions } from "./data-table-row-actions";
+import { DataTableColumnHeader } from "../../table/data-table-column-header";
+import { DataTableRowActions } from "../../table/data-table-row-actions";
 import { RouterType } from "@/lib/validations/router";
+import { Badge } from "@/components/ui/badge";
 // import { Badge } from "../ui/badge";
 
 export const columns: ColumnDef<RouterType>[] = [
@@ -33,6 +34,16 @@ export const columns: ColumnDef<RouterType>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    accessorKey: "typeOfUker", // Ubah ke field yang benar dari RouterFormType
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Jenis Uker" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[150px]">{row.getValue("typeOfUker")}</div>
+    ), // tampilkan nilai typeOfUker
+    enableSorting: true,
   },
   {
     accessorKey: "routerSeries", // Ubah ke field yang benar dari RouterFormType
@@ -77,13 +88,14 @@ export const columns: ColumnDef<RouterType>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status");
       return (
-        <div
-          className={`w-[100px] ${
+        <Badge
+          variant="outline"
+          className={`w-auto ${
             status === "AKTIF" ? "text-green-500" : "text-red-500"
           }`}
         >
           {String(status)}
-        </div>
+        </Badge>
       );
     },
     filterFn: (row, id, value) => value.includes(row.getValue(id)),

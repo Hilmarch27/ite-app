@@ -7,32 +7,37 @@ import { Separator } from "@/components/ui/separator";
 import { SunMoon } from "@/components/ui/sun-moon";
 import { iconMap, tsiData } from "@/data/tsi-data";
 import { IconArrowBackUp } from "@tabler/icons-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/table/data-table";
-import { columns } from "@/components/table/columns";
+import { columns } from "@/components/dashboard/tsi/columns";
 import { DialogCustom } from "@/components/custom/dialog-custom";
 import { RouterType } from "@/lib/validations/router";
+import { getAll } from "@/app/actions/router";
+import { toast } from "sonner";
 
 const PageDashboard = () => {
   const [openTable, setOpenTable] = useState({
     key: "none",
     isOpen: false,
   });
-  console.log(openTable);
-  const tasks: RouterType[] = [
-    {
-      id: "25415b86-6e04-47ca-89f0-57c651685fe6",
-      typeOfUker: "KC",
-      routerSeries: "CISCO",
-      nameUker: "Dini",
-      kanca: "bandung",
-      kanwil: "bandung",
-      ipUker: "38.0.101.76",
-      snDevice: "AB1234",
-      status: "AKTIF",
-      information: "-",
-    },
-  ];
+
+  const [routers, setRouters] = useState<RouterType[]>([]);
+
+  console.log(routers);
+
+  useEffect(() => {
+    const fetchRouters = async () => {
+      const result = await getAll();
+      if (result.success && result.data) {
+        setRouters(result.data);
+      } else {
+        toast.error(result.error as string);
+      }
+    };
+
+    fetchRouters();
+  }, []);
+
   return (
     <>
       <Layout>
@@ -93,7 +98,7 @@ const PageDashboard = () => {
                   <IconArrowBackUp stroke={2} />
                   Back
                 </Button>
-                <DataTable data={tasks} columns={columns} />
+                <DataTable data={routers} columns={columns} />
               </div>
             ) : (
               <>
