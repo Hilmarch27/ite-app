@@ -27,7 +27,7 @@ model User {
 }
 
 model Router {
-  id           String @id @default(uuid())
+  id           String   @id @default(uuid())
   typeOfUker   String
   routerSeries String
   nameUker     String
@@ -37,6 +37,8 @@ model Router {
   snDevice     String
   status       Status
   information  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
