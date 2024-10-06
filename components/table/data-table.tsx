@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import * as React from "react";
@@ -27,15 +28,20 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "../dashboard/tsi/data-table-toolbar";
+import { RouterType } from "@/lib/validations/router";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  setData: React.Dispatch<React.SetStateAction<TData[]>>;
+  updateRow: (id: string, router: RouterType) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  setData,
+  updateRow,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -45,6 +51,10 @@ export function DataTable<TData, TValue>({
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
+  const [editedRows, setEditedRows] = React.useState({});
+  const [originalData, setOriginalData] = React.useState(() => [...data]);
+  const [validRows, setValidRows] = React.useState({});
+
   const table = useReactTable({
     data,
     columns,
@@ -53,6 +63,50 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+    },
+    meta: {
+      editedRows,
+      setEditedRows,
+      validRows,
+      setValidRows,
+      revertData: (rowIndex: number, revert: boolean) => {
+        if (revert) {
+          setData((old) =>
+            old.map((row, index) =>
+              index === rowIndex ? originalData[rowIndex] : row
+            )
+          );
+        } else {
+          setOriginalData((old) =>
+            old.map((row, index) => (index === rowIndex ? data[rowIndex] : row))
+          );
+        }
+      },
+      updateRow: (rowIndex: number) => {
+       updateRow((data[rowIndex] as RouterType).id, data[rowIndex] as RouterType);
+      },
+      updateData: (
+        rowIndex: number,
+        columnId: string,
+        value: string, // pastikan value ini dalam bentuk string
+        isValid: boolean
+      ) => {
+        setData((old: TData[]) =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              return {
+                ...old[rowIndex],
+                [columnId]: String(value),
+              };
+            }
+            return row;
+          })
+        );
+        setValidRows((old : any) => ({
+          ...old,
+          [rowIndex]: { ...old[rowIndex], [columnId]: isValid },
+        }));
+      },
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,

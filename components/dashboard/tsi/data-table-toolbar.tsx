@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/popover";
 import useDialogStore from "@/zustand/dialog-store";
 import { status, typeOfUker } from "@/data/router-data";
+import useRouters from "@/hook/use-router-querry";
+import { toast } from "sonner";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -29,15 +31,24 @@ export function DataTableToolbar<TData>({
   const { openDialog } = useDialogStore();
   // Get selected rows
   const selectedRows = table.getSelectedRowModel().rows;
+  const { removeRouter } = useRouters();
 
   // Delete handler
-  function handleDeleteSelected(selectedRows: ReactTable.Row<TData>[]) {
+  async function handleDeleteSelected(selectedRows: ReactTable.Row<TData>[]) {
     const selectedIds = selectedRows.map(
       (row) => (row.original as { id: string }).id
     );
-    console.log("Deleting rows with IDs:", selectedIds);
+    const result = await removeRouter(selectedIds.toString());
 
-    // Perform your delete logic here, e.g., API call with selectedIds
+    if (result.success) {
+      toast.success("Berhasil Menghapus Data");
+    } else if (result.success === false && result.error) {
+      // Tampilkan pesan error dari server jika ada
+      toast.error(JSON.stringify(result.error));
+    } else {
+      toast.error("Gagal Menghapus Data");
+      console.error(result.error);
+    }
   }
 
   return (
@@ -45,7 +56,9 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter tasks..."
-          value={(table.getColumn("nameUker")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("nameUker")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn("nameUker")?.setFilterValue(event.target.value)
           }
@@ -88,7 +101,7 @@ export function DataTableToolbar<TData>({
       </div>
       <div className="flex items-center justify-between gap-2">
         <Popover>
-          <PopoverTrigger>
+          <PopoverTrigger asChild>
             <Button size={"xs"}>Tambah Data</Button>
           </PopoverTrigger>
           <PopoverContent side="left" className="max-w-[150px]">

@@ -12,31 +12,28 @@ import { DataTable } from "@/components/table/data-table";
 import { columns } from "@/components/dashboard/tsi/columns";
 import { DialogCustom } from "@/components/custom/dialog-custom";
 import { RouterType } from "@/lib/validations/router";
-import { getAll } from "@/app/actions/router";
-import { toast } from "sonner";
+import useRouters from "@/hook/use-router-querry";
 
 const PageDashboard = () => {
-  const [openTable, setOpenTable] = useState({
-    key: "none",
-    isOpen: false,
+  const [openTable, setOpenTable] = useState(() => {
+    // Ambil nilai dari localStorage saat pertama kali render
+    const saved = localStorage.getItem("openTable");
+    return saved ? JSON.parse(saved) : { key: "none", isOpen: false };
   });
 
-  const [routers, setRouters] = useState<RouterType[]>([]);
+  // Simpan nilai openTable ke localStorage setiap kali berubah
+  useEffect(() => {
+    localStorage.setItem("openTable", JSON.stringify(openTable));
+  }, [openTable]);
 
-  console.log(routers);
+  const { data: originalData, isValidating, updateRow } = useRouters();
+  console.log('original data',originalData);
+  const [data, setData] = useState<RouterType[]>([]);
 
   useEffect(() => {
-    const fetchRouters = async () => {
-      const result = await getAll();
-      if (result.success && result.data) {
-        setRouters(result.data);
-      } else {
-        toast.error(result.error as string);
-      }
-    };
-
-    fetchRouters();
-  }, []);
+    if (isValidating) return;
+    setData([...originalData.data]);
+  }, [isValidating]);
 
   return (
     <>
@@ -98,7 +95,12 @@ const PageDashboard = () => {
                   <IconArrowBackUp stroke={2} />
                   Back
                 </Button>
-                <DataTable data={routers} columns={columns} />
+                <DataTable
+                  updateRow={updateRow}
+                  setData={setData}
+                  data={data}
+                  columns={columns}
+                />
               </div>
             ) : (
               <>

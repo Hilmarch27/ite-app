@@ -14,7 +14,7 @@ import RouterForm from "../dashboard/tsi/router-form";
 
 export const DialogCustom: FC = () => {
   const { isOpen, closeDialog, dialogType } = useDialogStore();
-  console.log("😗 ~ dialogType:", dialogType);
+  // console.log("😗 ~ dialogType:", dialogType);
 
   return (
     <Dialog open={isOpen} onOpenChange={closeDialog}>

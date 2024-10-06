@@ -6,13 +6,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { kanca, routerField, status, typeOfUker } from "@/data/router-data";
 import { InputForm } from "@/components/custom/input-custom";
-import { create } from "@/app/actions/router";
 import { RouterFormSchema } from "@/lib/validations/router";
 import { toast } from "sonner";
 import useDialogStore from "@/zustand/dialog-store";
+import useRouters from "@/hook/use-router-querry";
 
 const RouterForm = () => {
-  const {closeDialog} = useDialogStore(); 
+  const { closeDialog } = useDialogStore();
+  const { createRouter } = useRouters();
 
   const form = useForm<any>({
     resolver: zodResolver(RouterFormSchema),
@@ -20,23 +21,15 @@ const RouterForm = () => {
 
   const handleSubmit = async (data: any) => {
     console.log(data);
-    const result = await create(data);
 
-    if (!result) {
-      console.log("Something went wrong");
-      return;
-    }
+    const result = await createRouter(data);
 
-    if (result.error) {
-      // set local error state
-      console.log(result.error);
-      return;
-    }
-
-    if (result.success === true) {
+    if (result.success) {
       toast.success("Berhasil Tambah Data");
       closeDialog();
-      return;
+    } else {
+      toast.error("Gagal Tambah Data");
+      console.error(result.error);
     }
   };
 
