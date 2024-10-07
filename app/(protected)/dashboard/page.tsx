@@ -100,6 +100,7 @@ const PageDashboard = () => {
                   Back
                 </Button>
                 <DataTable
+                  originalData={originalData.data}
                   updateRow={updateRow}
                   setData={setData}
                   data={data}

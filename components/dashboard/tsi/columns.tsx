@@ -106,6 +106,7 @@ export const columns: ColumnDef<RouterType>[] = [
     meta: {
       type: "select",
       options: status,
+      signature: "status",
     },
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },

@@ -95,6 +95,7 @@ export function InputForm({
                       type={type}
                       placeholder={placeholder?.toLowerCase()}
                       {...field}
+                      value={field.value ?? ""}
                     />
                   )}
                 </FormControl>

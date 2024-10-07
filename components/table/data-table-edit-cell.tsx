@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MouseEvent } from "react";
+import React, { MouseEvent, useEffect, useCallback } from "react";
 import { Button } from "../ui/button";
 import { Check, Pencil, X } from "lucide-react";
 
@@ -10,19 +10,47 @@ export const EditedCell = ({ row, table }: any) => {
     ? Object.values(validRow)?.some((item) => !item)
     : false;
 
-  // console.log("disableSubmit", disableSubmit);
-  const setEditedRows = (e: MouseEvent<HTMLButtonElement>) => {
-    const elName = e.currentTarget.name;
-    meta?.setEditedRows((old: []) => ({
-      ...old,
-      [row.id]: !old[row.id],
-    }));
-    if (elName !== "edit") {
-      e.currentTarget.name === "cancel"
-        ? meta?.revertData(row.index)
-        : meta?.updateRow(row.index);
-    }
-  };
+  const handleAction = useCallback(
+    (action: "edit" | "cancel" | "done") => {
+      meta?.setEditedRows((old: Record<string, boolean>) => ({
+        ...old,
+        [row.id]: action === "edit" ? true : false,
+      }));
+
+      if (action !== "edit") {
+        action === "cancel"
+          ? meta?.revertData(row.index)
+          : meta?.updateRow(row.index);
+      }
+    },
+    [row.id, row.index, meta]
+  );
+
+  const setEditedRows = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      const action = e.currentTarget.name as "edit" | "cancel" | "done";
+      handleAction(action);
+    },
+    [handleAction]
+  );
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        if (meta?.editedRows[row.id] && !disableSubmit) {
+          handleAction("done");
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleAction, row.id, meta?.editedRows, disableSubmit]);
+
   return meta?.editedRows[row.id] ? (
     <div className="flex items-center gap-2">
       <Button size={"icon"} onClick={setEditedRows} name="cancel">

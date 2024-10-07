@@ -35,6 +35,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   setData: React.Dispatch<React.SetStateAction<TData[]>>;
   updateRow: (id: string, router: RouterType) => void;
+  originalData: TData[];
 }
 
 export function DataTable<TData, TValue>({
@@ -42,6 +43,7 @@ export function DataTable<TData, TValue>({
   data,
   setData,
   updateRow,
+  originalData,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -52,7 +54,6 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [editedRows, setEditedRows] = React.useState({});
-  const [originalData, setOriginalData] = React.useState(() => [...data]);
   const [validRows, setValidRows] = React.useState({});
 
   const table = useReactTable({
@@ -69,21 +70,18 @@ export function DataTable<TData, TValue>({
       setEditedRows,
       validRows,
       setValidRows,
-      revertData: (rowIndex: number, revert: boolean) => {
-        if (revert) {
-          setData((old) =>
-            old.map((row, index) =>
-              index === rowIndex ? originalData[rowIndex] : row
-            )
-          );
-        } else {
-          setOriginalData((old) =>
-            old.map((row, index) => (index === rowIndex ? data[rowIndex] : row))
-          );
-        }
+      revertData: (rowIndex: number) => {
+        setData((old) =>
+          old.map((row, index) =>
+            index === rowIndex ? originalData[rowIndex] : row
+          )
+        );
       },
       updateRow: (rowIndex: number) => {
-       updateRow((data[rowIndex] as RouterType).id, data[rowIndex] as RouterType);
+        updateRow(
+          (data[rowIndex] as RouterType).id,
+          data[rowIndex] as RouterType
+        );
       },
       updateData: (
         rowIndex: number,
@@ -102,7 +100,7 @@ export function DataTable<TData, TValue>({
             return row;
           })
         );
-        setValidRows((old : any) => ({
+        setValidRows((old: any) => ({
           ...old,
           [rowIndex]: { ...old[rowIndex], [columnId]: isValid },
         }));

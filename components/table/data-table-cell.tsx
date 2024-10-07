@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeEvent, useEffect, useState } from "react";
-
-type Option = {
-  label: string;
-  value: string;
-};
+import { Input } from "../ui/input";
+import { CustomSelect } from "../custom/custome-select";
+import { Badge } from "../ui/badge";
 
 type EditTableCellProps = {
   getValue: () => any; // or more specific type if you know it
@@ -25,6 +23,7 @@ export const EditTableCell = ({
   const tableMeta = table.options.meta;
   const [value, setValue] = useState(initialValue);
   const [validationMessage, setValidationMessage] = useState("");
+  console.log("value", columnMeta);
 
   useEffect(() => {
     setValue(String(initialValue)); // Ensure it is string
@@ -33,16 +32,6 @@ export const EditTableCell = ({
   const onBlur = (e: ChangeEvent<HTMLInputElement>) => {
     displayValidationMessage(e);
     tableMeta?.updateData(row.index, column.id, value, e.target.validity.valid);
-  };
-  const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    displayValidationMessage(e);
-    setValue(e.target.value);
-    tableMeta?.updateData(
-      row.index,
-      column.id,
-      e.target.value,
-      e.target.validity.valid
-    );
   };
 
   const displayValidationMessage = <
@@ -78,19 +67,19 @@ export const EditTableCell = ({
 
   if (tableMeta?.editedRows[row.id]) {
     return columnMeta?.type === "select" ? (
-      <select
-        onChange={onSelectChange}
-        value={initialValue}
+      <CustomSelect
+        options={columnMeta?.options || []}
+        onValueChange={(value) => {
+          setValue(value);
+          tableMeta?.updateData(row.index, column.id, value, true);
+        }}
+        initialValue={initialValue}
         required={columnMeta?.required}
-      >
-        {columnMeta?.options?.map((option: Option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+        placeholder="Select an option"
+      />
     ) : (
-      <input
+      <Input
+        className="h-[36px]"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
@@ -101,5 +90,24 @@ export const EditTableCell = ({
       />
     );
   }
-  return <span>{value}</span>;
+  return (
+    <>
+      {columnMeta?.signature ? (
+        <Badge
+          variant="outline"
+          className={`${
+            value === "AKTIF"
+              ? "text-green-500 border-green-500"
+              : value === "TUTUP"
+              ? "text-red-500 border-red-500"
+              : ""
+          } w-[60px] h-[24px] text-center`}
+        >
+          {value}
+        </Badge>
+      ) : (
+        <span>{value}</span>
+      )}
+    </>
+  );
 };
