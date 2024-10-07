@@ -15,19 +15,23 @@ import { RouterType } from "@/lib/validations/router";
 import useRouters from "@/hook/use-router-querry";
 
 const PageDashboard = () => {
-  const [openTable, setOpenTable] = useState(() => {
-    // Ambil nilai dari localStorage saat pertama kali render
-    const saved = localStorage.getItem("openTable");
-    return saved ? JSON.parse(saved) : { key: "none", isOpen: false };
-  });
+  const [openTable, setOpenTable] = useState({ key: "none", isOpen: false });
 
-  // Simpan nilai openTable ke localStorage setiap kali berubah
   useEffect(() => {
+    // Check localStorage on the client-side
+    const saved = localStorage.getItem("openTable");
+    if (saved) {
+      setOpenTable(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save to localStorage whenever openTable changes
     localStorage.setItem("openTable", JSON.stringify(openTable));
   }, [openTable]);
 
   const { data: originalData, isValidating, updateRow } = useRouters();
-  console.log('original data',originalData);
+  // console.log("original data", originalData);
   const [data, setData] = useState<RouterType[]>([]);
 
   useEffect(() => {
