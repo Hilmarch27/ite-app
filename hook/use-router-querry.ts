@@ -2,8 +2,8 @@ import { create, edit, remove } from "@/app/actions/router";
 import { RouterType } from "@/lib/validations/router";
 import useSWR, { mutate } from "swr";
 
-// const url = "http://localhost:3000/api/routers";
-const url = "https://ite-app.vercel.app/api/routers";
+const url = "http://localhost:3000/api/routers";
+// const url = "https://ite-app.vercel.app/api/routers";
 
 // const dev = `${process.env.API_URL_DEV}/routers`;
 // const prod = `${process.env.URL_API}/routers`;

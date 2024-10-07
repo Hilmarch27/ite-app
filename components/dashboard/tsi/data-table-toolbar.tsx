@@ -41,6 +41,7 @@ export function DataTableToolbar<TData>({
     const result = await removeRouter(selectedIds.toString());
 
     if (result.success) {
+      table.resetRowSelection();
       toast.success("Berhasil Menghapus Data");
     } else if (result.success === false && result.error) {
       // Tampilkan pesan error dari server jika ada
