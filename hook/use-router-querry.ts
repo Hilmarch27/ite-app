@@ -3,11 +3,14 @@ import { RouterType } from "@/lib/validations/router";
 import useSWR, { mutate } from "swr";
 
 // const url = "http://localhost:3000/api/routers";
-const url = `${process.env.NEXT_PUBLIC_API_URL}/routers`;
+// const url = `${process.env.NEXT_PUBLIC_API_URL}/routers`;
 
-// const dev = `${process.env.API_URL_DEV}/routers`;
-// const prod = `${process.env.URL_API}/routers`;
-// const url = process.env.NODE_ENV === "development" ? dev : prod;
+
+const dev = "http://localhost:3001/api/routers";
+const prod = `${process.env.NEXT_PUBLIC_API_URL}/routers`;
+const url = process.env.NEXT_PUBLIC_NODE_ENV === "development" ? dev : prod;
+
+console.log("env url", url);
 
 async function getRequest() {
   const response = await fetch(url);
@@ -29,14 +32,14 @@ export default function useRouters() {
     }
   };
 
-  const removeRouter = async (id: string) => {
+  const removeRouter = async (ids: string | string[]) => {
     try {
-      const result = await remove(id);
+      const result = await remove(ids);
       mutate(url);
-      console.log(`Router ${id} deleted successfully`);
+      console.log(`Router ${ids} deleted successfully`);
       return result; // Mengembalikan hasil success atau error dari server
     } catch (error) {
-      console.error(`Error deleting router ${id}:`, error);
+      console.error(`Error deleting router ${ids}:`, error);
       return { success: false, error }; // Mengembalikan status gagal
     }
   };

@@ -18,7 +18,6 @@ export interface Router {
   information: string;
 }
 
-
 export async function create(formData: z.infer<typeof RouterFormSchema>) {
   const userId: string = (await getUserId()) || "";
   // Validate form fields
@@ -63,7 +62,6 @@ export async function create(formData: z.infer<typeof RouterFormSchema>) {
     return { success: false, error: e };
   }
 }
-
 
 export async function edit(
   id: string,
@@ -119,35 +117,40 @@ export async function edit(
   }
 }
 
-
-
-export async function remove(id: string) {
+// Fungsi remove yang dimodifikasi
+export async function remove(ids: string | string[]) {
   try {
     const userId: string = (await getUserId()) || "";
+    const idsArray = Array.isArray(ids) ? ids : [ids];
 
-    const router = await prisma.router.findUnique({
-      where: { id },
-      select: { userId: true },
+    // Verifikasi kepemilikan dan keberadaan router
+    const routers = await prisma.router.findMany({
+      where: { id: { in: idsArray } },
+      select: { id: true, userId: true },
     });
 
-    if (!router) {
-      console.log(`Router with id ${id} not found`);
-      return { success: false, error: "Router not found" }; // Tambahkan pesan error
+    if (routers.length !== idsArray.length) {
+      console.log(`Some routers not found`);
+      return { success: false, error: "Some routers not found" };
     }
 
-    if (router.userId !== userId) {
-      console.log(`Unauthorized to delete router with id ${id}`);
-      return { success: false, error: "Unauthorized to delete this router" }; // Tambahkan pesan error
+    const unauthorizedRouters = routers.filter(
+      (router) => router.userId !== userId
+    );
+    if (unauthorizedRouters.length > 0) {
+      console.log(`Unauthorized to delete some routers`);
+      return { success: false, error: "Unauthorized to delete some routers" };
     }
 
-    await prisma.router.delete({
-      where: { id },
+    // Hapus router
+    const result = await prisma.router.deleteMany({
+      where: { id: { in: idsArray } },
     });
 
-    console.log("Router successfully deleted:", id);
-    return { success: true, data: { id } };
+    console.log("Routers successfully deleted:", idsArray);
+    return { success: true, data: { count: result.count, ids: idsArray } };
   } catch (e) {
-    console.error("Error deleting router:", e);
+    console.error("Error deleting routers:", e);
     return {
       success: false,
       error: e instanceof Error ? e.message : "Unknown error occurred",

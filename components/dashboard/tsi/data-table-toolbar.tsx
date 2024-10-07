@@ -38,11 +38,16 @@ export function DataTableToolbar<TData>({
     const selectedIds = selectedRows.map(
       (row) => (row.original as { id: string }).id
     );
-    const result = await removeRouter(selectedIds.toString());
+    const result = await removeRouter(selectedIds);
 
     if (result.success) {
-      table.resetRowSelection();
-      toast.success("Berhasil Menghapus Data");
+      if ("data" in result) {
+        table.resetRowSelection();
+        toast.success(`Berhasil Menghapus ${result.data.count} Data`);
+      } else {
+        // Handle the case where result does not have a data property
+        toast.success("Berhasil Menghapus Data");
+      }
     } else if (result.success === false && result.error) {
       // Tampilkan pesan error dari server jika ada
       toast.error(JSON.stringify(result.error));
