@@ -6,9 +6,8 @@ import useSWR, { mutate } from "swr";
 // const url = `${process.env.NEXT_PUBLIC_API_URL}/routers`;
 
 
-const dev = "http://localhost:3001/api/routers";
-const prod = `${process.env.NEXT_PUBLIC_API_URL}/routers`;
-const url = process.env.NEXT_PUBLIC_NODE_ENV === "development" ? dev : prod;
+const url = "/api/routers";
+
 
 console.log("env url", url);
 
